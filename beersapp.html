@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>BeerApp</title>
+</head>
+<body>
+
+	<h1>Beers Information</h1>
+	<form action="#" id="find-info">
+		<fieldset>
+			<legend>Serch</legend>
+			<div>
+				<label for="beer">Write a beer name to find info..</label>
+				<input type="text" id="beer-info">
+			</div>
+			<div>
+				<input type="submit" value="Serch" >
+			</div>
+
+		</fieldset>
+	</form>
+	<form action="#" id="select-beer">
+		<fieldset>
+			<legend>Select Beer</legend>
+			<div>
+				<label for="beer">Select a Beer</label>
+				<select id="beer"></select>
+			</div>
+		</fieldset>
+	</form>
+
+	<form action="#" id="show-information">
+		<fieldset>
+			<legend>Beer-Info</legend>
+			<div>
+				<label for="beer">Read Information</label>
+				<select id="beer-information"></select>
+				<p id="beer-text"></p>
+			</div>
+		</fieldset>
+	</form>
+
+
+
+	<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+	<script>
+
+	$("#find-info input[type='submit']").on('click',function(event){
+		event.preventDefault();
+		var beerName = $("#find-info #beer-info").val();
+		var urlBeerInlet="https://quiet-inlet-67115.herokuapp.com/api/search/all?q="+beerName;
+	
+		$.ajax({
+			url:urlBeerInlet,
+			dataType:'json',
+		})
+		.success(function( beerData ) {
+		
+				var contentSelect = "<option disabled selected>Select beer</option>";
+
+				$.each( beerData, function(i, elem) {
+					contentSelect += '<option value="' + elem.id + '">' + elem.name + '</option>';
+				})
+				$("#select-beer select").html(contentSelect);
+				})
+	})
+	  
+	$("#select-beer select").on('change',
+		function(e){
+			e.preventDefault(" ");
+
+			var idInfo =$(this).val();
+			var urlInfo ="https://quiet-inlet-67115.herokuapp.com/api/beer/" + idInfo;
+			console.log("urlInfo")
+			$.ajax({
+				url: urlInfo,
+				dataType: 'json'
+			})
+
+			.success(function(data){
+				console.log(data)
+				$("#beer-text").html(data.style.description);
+				// var content ="<p>Information</p>";
+				// $.each(data,function(i, elem){
+				// content +='op="' + elem.id + '">' + elem.name +>;
+				// });
+				// $("#show-information").html(content);
+				// console.log("idInfo")
+
+			})
+		})
+	// $("#select-beer select").on('change', function(e) {
+	// 		e.preventDefault();
+	// 		var beerId = $(this).val();
+	// 		var urlInfo="https://quiet-inlet-67115.herokuapp.com/api/search/all?q="+beerId;
+			
+
+	// 		$.ajax({
+	// 			url: urlInfo,
+	// 			dataType: 'json'
+	// 		})
+	// 		.success(function(beerData) {
+	// 			var contentSelect = "<option disabled selected>Select beer</option>";
+
+				
+	// 			$.each( beerData.items, function(i, elem) {
+	// 				contentSelect += '<option value="' + elem.id + '">' + elem.name + '</option>';
+	// 			})
+	// 		})
+	// 	})
+	</script>
+</body>
+</html>
